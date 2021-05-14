@@ -1,0 +1,152 @@
+<html>
+    <head>
+        <title>Currency-converter</title>
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,600;1,300&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Handlee&display=swap" rel="stylesheet">
+    </head>
+
+    <style>
+        body{
+            background-color:#F0F3F8;
+            display: flex;
+            justify-content: center;
+            font-size: 25;
+            font-family: 'Open Sans', sans-serif;
+            background-image: url("https://www.winvesta.in/wp-content/uploads/2020/11/Blog-The-Advantages-of-International-Multi-Currency-Investment-Account.png");
+            background-repeat: no-repeat;
+            background-size:cover ;
+            background-position: center;
+        }
+        .container{
+            background-color: white;
+            /* display: flex; */
+            /* flex-direction: column;
+            align-items: center ;
+            text-align: center; */
+            text-align: center;
+            opacity: 0.95;
+            
+            
+            margin-top: 40px;
+            margin-bottom: 40px;
+            height: 80vh;
+            width: 350px;
+            border-radius: 10px;
+            padding:16px 24px 0px
+
+        }
+        .box{
+            display: flex;
+            flex-direction: column;
+            margin-top: 70;
+            height: 50vh;
+            justify-content: space-between;
+        }
+        .currency{
+            border: none;
+        }
+        fieldset,input{
+            border-radius: 7px;
+            border-color: #BDCBD8;
+            font-size: 16;
+            height: 45;
+            font-family: 'Open Sans', sans-serif;
+            display: flex;
+            justify-content: space-between;
+
+        }
+        fieldset:hover{
+            border-color: black;
+            transition: 1s;
+        }
+        select{
+            width: 100%;
+            font-size: 16;
+            font-family: cursive;
+        }
+        h4{ 
+            background-color: #54db76;
+            border-radius: 20px;
+            height: 40;
+            text-align: center;
+            font-family: 'Handlee', cursive;
+            font-size: 25;
+        }
+
+    </style>
+
+    <body>
+        <div class="container">
+            <h4>Currency Converter</h4>
+            <div class="box">
+                <fieldset>
+                    <legend>From:</legend>
+                    <select name = "currency" class="currency"></select>
+
+                </fieldset>
+                
+                <input type="number" id="num" name="" onchange="converter()">
+
+                <fieldset>
+                    <legend>To:</legend>
+                    <select name = "currency" class="currency"></select>
+
+                </fieldset>
+                <!-- <select name = "currency" class="currency"></select> -->
+                <input type="number" id="ans" name="" >
+
+            </div>
+                
+            <!-- <button class="btn" id="btn" >Convert.....</button> -->
+        </div>
+    </body>
+
+
+
+    <script>
+        const select = document.querySelectorAll(".currency");
+        const btn = document.getElementById("btn");
+        const num = document.getElementById("num");
+        const ans = document.getElementById("ans");
+
+        fetch("https://api.frankfurter.app/currencies")
+        .then((data)=> data.json())
+        .then((data)=>{
+            display(data);
+
+        });
+
+        function display(data){
+            const entries = Object.entries(data);
+            for(var i=0;i<entries.length;i++){
+                select[0].innerHTML += `<option value="${entries[i][0]}">${entries[i][0]}-${entries[i][1]}</option>`;
+                select[1].innerHTML += `<option value="${entries[i][0]}">${entries[i][0]}-${entries[i][1]}</option>`;
+            }
+        }
+
+        function converter(){
+            let currency1 = select[0].value;
+            let currency2 = select[1].value;
+            let values = num.value;
+
+            if (currency1 != currency2){
+                convert(currency1,currency2,values);
+            }
+            else{
+                alert("Choose different countries from dropdown menu");
+            }             
+        }
+
+        function convert(currency1,currency2,value){
+            const host = "api.frankfurter.app";
+            fetch(`https://${host}/latest?amount=${value}&from=${currency1}&to=${currency2}`)
+            .then((val)=>val.json())
+            .then((val)=>{
+                console.log(Object.values(val.rates)[0]);
+                ans.value=Object.values(val.rates)[0];
+            })
+        }
+    </script>
+</html>
